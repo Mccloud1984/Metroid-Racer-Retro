@@ -35,14 +35,30 @@ public class AdjustZones : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        float cameraWidth = MainCamera.pixelRect.width;
+        float cameraHeight = MainCamera.pixelRect.height;
+        float pixelsToWorldHeight = ((Camera.main.orthographicSize) / (Screen.height / 2.0f));
+        float pixelsToWorldWidth = ((Camera.main.orthographicSize) / (Screen.width));
         foreach(var zone in Zones)
         {
             //float zoneCenter = zone.transform.position.x;b 
-            float cameraWidth = MainCamera.pixelRect.width;
             //Renderer zoneRenderer = zone.GetComponent<Renderer>();
-            float pixelsToWorld = ((Camera.main.orthographicSize) / (Screen.height / 2.0f));
             //zoneRenderer.bounds.size = new Vector3(cameraWidth + 20, zone.size.y);
-            zone.size = new Vector3((cameraWidth + zoneHangeOver) * pixelsToWorld, zone.size.y);
+            float zoneHeight = zone.size.y;
+            float zoneWidth = zone.size.x;
+            if(zoneWidth > 1)
+            {
+                zoneWidth = (cameraWidth + zoneHangeOver) * pixelsToWorldWidth;
+                if (zone.size.x < 0)
+                    zoneWidth = -zoneWidth;
+            }
+            if(zoneHeight > 1)
+            {
+                zoneHeight = (cameraHeight + zoneHangeOver) * pixelsToWorldHeight;
+                if (zone.size.y < 0)
+                    zoneHeight = -zoneHeight;
+            }   
+            zone.size = new Vector3(zoneWidth, zoneHeight);
             //zone.transform.right = new Vector3((cameraWidth + 20) / 2, zone.transform.right.y);
             zoneData.Add(new ZoneData(zone));
         }

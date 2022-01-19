@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
+    float? playerOffset = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,9 +16,12 @@ public class FollowPlayer : MonoBehaviour
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector3 playerLocation = player.transform.position;
-        playerLocation.x = transform.position.x;
-        //playerLocation.y = transform.position.y;
-        playerLocation.z = transform.position.z;
-        transform.position = playerLocation;
+        Vector3 newLocation = new Vector3();
+        if (playerOffset == null)
+            playerOffset = playerLocation.y;
+        newLocation.x = transform.position.x;
+        newLocation.y = playerLocation.y - playerOffset.Value;
+        newLocation.z = transform.position.z;
+        transform.position = newLocation;
     }
 }
